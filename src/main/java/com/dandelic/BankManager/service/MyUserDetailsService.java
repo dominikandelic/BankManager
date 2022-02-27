@@ -1,8 +1,8 @@
 package com.dandelic.BankManager.service;
 
 import com.dandelic.BankManager.model.MyUserDetails;
-import com.dandelic.BankManager.repository.UserRepository;
 import com.dandelic.BankManager.model.User;
+import com.dandelic.BankManager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +23,6 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         user.orElseThrow(() -> new UsernameNotFoundException(username + " not found."));
-        return  user.map(MyUserDetails::new).get();
+        return user.map(MyUserDetails::new).get();
     }
 }

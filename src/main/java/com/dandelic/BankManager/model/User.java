@@ -1,6 +1,11 @@
 package com.dandelic.BankManager.model;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,9 +13,15 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class User {
+    @ToString.Include
     @Id
     @GeneratedValue
+    @Column(nullable = false)
     private long id;
 
     private String username;
@@ -23,13 +34,12 @@ public class User {
 
     private String roles;
 
+    @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<BankAccount> bankAccountSet;
 
-    protected User() {
-    }
 
     public User(String username, String email, String password, String roles, boolean active, Set<BankAccount> bankAccountSet) {
         this.username = username;
@@ -46,60 +56,12 @@ public class User {
         this.bankAccountSet = bankAccountSet;
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<BankAccount> getBankAccountSet() {
-        return bankAccountSet;
-    }
-
-    public void setBankAccountSet(Set<BankAccount> bankAccountSet) {
-        this.bankAccountSet = bankAccountSet;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    public User(String username, String email, String password, String roles, boolean active) {
         this.username = username;
-    }
-
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
+        this.email = email;
+        this.password = password;
         this.roles = roles;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
         this.active = active;
     }
-
 }

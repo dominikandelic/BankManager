@@ -1,12 +1,17 @@
 package com.dandelic.BankManager.model;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "bank_accounts")
+@Getter
+@Setter
+@NoArgsConstructor
 public class BankAccount {
     @Id
     @GeneratedValue
@@ -19,44 +24,15 @@ public class BankAccount {
     @NotBlank(message = "Account type is mandatory")
     private String accountType;
 
-    protected BankAccount() {
-    }
 
-    public BankAccount(double balance, String accountType) {
+    @ManyToOne
+    private User user;
+
+
+    public BankAccount(double balance, String accountType, User user) {
         this.balance = balance;
         this.accountType = accountType;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCcPin() {
-        return ccPin;
-    }
-
-    public void setCcPin(String ccPin) {
-        this.ccPin = ccPin;
+        this.user = user;
     }
 
 }

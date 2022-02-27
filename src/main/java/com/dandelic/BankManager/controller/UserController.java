@@ -1,8 +1,9 @@
 package com.dandelic.BankManager.controller;
 
-import com.dandelic.BankManager.service.UserService;
 import com.dandelic.BankManager.dto.BankAccountDto;
 import com.dandelic.BankManager.dto.UserDto;
+import com.dandelic.BankManager.service.BankAccountService;
+import com.dandelic.BankManager.service.UserService;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    BankAccountService bankAccountService;
+
 
     @GetMapping
     public List<UserDto> getUsers() {
@@ -33,7 +37,7 @@ public class UserController {
 
     @GetMapping("/{userId}/bankaccounts/")
     public Set<BankAccountDto> getBankAccounts(@PathVariable Long userId) {
-        return userService.getBankAccounts(userId);
+        return bankAccountService.getBankAccounts(userId);
     }
 
     @PostMapping
@@ -46,38 +50,35 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public BankAccountDto addBankAccount(@Valid @RequestBody BankAccountDto bankAccountDto, @PathVariable Long userId) {
         Preconditions.checkNotNull(bankAccountDto);
-        return userService.addBankAccount(bankAccountDto, userId);
+        return bankAccountService.addBankAccount(bankAccountDto, userId);
     }
 
     @PutMapping("/{userId}/bankaccounts/{bankAccountId}")
     @ResponseStatus(HttpStatus.OK)
     public BankAccountDto updateBankAccount(@Valid @RequestBody BankAccountDto bankAccountDto, @PathVariable Long userId, @PathVariable Long bankAccountId) {
         Preconditions.checkNotNull(bankAccountDto);
-        return userService.updateBankAccount(bankAccountDto, userId);
+        return bankAccountService.updateBankAccount(bankAccountDto, userId);
     }
 
     @PutMapping("/{userId}/bankaccounts/{bankAccountId}/add")
     @ResponseStatus(HttpStatus.OK)
     public BankAccountDto addFundsToBankAccount(@RequestBody Map<String, Double> jsonRequest, @PathVariable Long userId, @PathVariable Long bankAccountId) {
         Preconditions.checkNotNull(jsonRequest);
-        return userService.addFundsToBankAccount(bankAccountId, userId, jsonRequest.get("amount"));
+        return bankAccountService.addFundsToBankAccount(bankAccountId, userId, jsonRequest.get("amount"));
     }
 
     @PutMapping("/{userId}/bankaccounts/transferFrom/{bankAccountIdFrom}/to/{bankAccountIdTo}")
     @ResponseStatus(HttpStatus.OK)
-    // Provjere
-    // Je li njegov račun i postoji li
-    // Ima li dovoljno sredstava da prenese
     public BankAccountDto transferFunds(@RequestBody Map<String, Double> jsonRequest, @PathVariable Long userId, @PathVariable Long bankAccountIdFrom, @PathVariable Long bankAccountIdTo) {
         Preconditions.checkNotNull(jsonRequest);
-        return userService.transferFunds(userId, bankAccountIdFrom, bankAccountIdTo, jsonRequest.get("amount"));
+        return bankAccountService.transferFunds(userId, bankAccountIdFrom, bankAccountIdTo, jsonRequest.get("amount"));
     }
 
     @DeleteMapping("/{userId}/bankaccounts/{bankAccountId}")
     @ResponseStatus(HttpStatus.OK)
-    // Nekakav secret ubaciti u ResponseBody kako bi se potvrdilo brisanje?
-    public boolean deleteBankAccount(@PathVariable Long userId, @PathVariable Long bankAccountId){
-        return userService.deleteBankAccount(userId, bankAccountId);
+    // TODO Insert secret as a way to protect from accidentally deleting bank account
+    public boolean deleteBankAccount(@PathVariable Long userId, @PathVariable Long bankAccountId) {
+        return bankAccountService.deleteBankAccount(userId, bankAccountId);
 
     }
 

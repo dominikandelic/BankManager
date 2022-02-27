@@ -17,7 +17,7 @@ public class MyUserDetails implements UserDetails {
     private boolean active;
 
 
-    public MyUserDetails(User user){
+    public MyUserDetails(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.active = user.isActive();

@@ -13,10 +13,15 @@ import java.util.Set;
 public class MyCommandLineRunner implements CommandLineRunner {
     @Autowired
     UserRepository userRepository;
+
     @Override
     // Just for testing, appends data to db
     public void run(String... args) throws Exception {
-        userRepository.save(new User("adminUser", "johndoe@gmail.com", "$2a$16$WUuXFP.gXQIxvjqHnEdC8uzKRl0YgKLzrWPMNoJVOfnuWkpYmPyqe", "ROLE_ADMIN,ROLE_USER", true, Set.of(new BankAccount(50, "checking"), new BankAccount(1000, "checking"))));
-        userRepository.save(new User("regularUser", "jackdoe@gmail.com", "$2a$16$WUuXFP.gXQIxvjqHnEdC8uzKRl0YgKLzrWPMNoJVOfnuWkpYmPyqe", "ROLE_USER", true, Set.of(new BankAccount(250, "checking"), new BankAccount(55500, "checking"))));
+        User adminUser = new User("adminUser", "johndoe@gmail.com", "$2a$16$WUuXFP.gXQIxvjqHnEdC8uzKRl0YgKLzrWPMNoJVOfnuWkpYmPyqe", "ROLE_ADMIN,ROLE_USER", true);
+        User regularUser = new User("regularUser", "jackdoe@gmail.com", "$2a$16$WUuXFP.gXQIxvjqHnEdC8uzKRl0YgKLzrWPMNoJVOfnuWkpYmPyqe", "ROLE_USER", true);
+        adminUser.setBankAccountSet(Set.of(new BankAccount(50, "checking", adminUser), new BankAccount(1000, "checking", adminUser)));
+        regularUser.setBankAccountSet(Set.of(new BankAccount(250, "checking", regularUser), new BankAccount(55500, "checking", regularUser)));
+        userRepository.save(adminUser);
+        userRepository.save(regularUser);
     }
 }
